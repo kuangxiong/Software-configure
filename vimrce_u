@@ -1,0 +1,300 @@
+map <F9> :call SaveInputData()<CR>
+func! SaveInputData()
+	exec "tabnew"
+	exec 'normal "+gP'
+	exec "w! /tmp/input_data"
+endfunc
+
+"colorscheme torte
+"colorscheme murphy
+"colorscheme desert 
+"colorscheme desert 
+"colorscheme elflord
+colorscheme desert
+
+" Set default encode
+"set fenc=utf-8
+"set fencs=utf-8,ucs-bom,shift-jis,gb18030,gbk,gb2312,cp936
+"set termencoding=utf-8
+"set encoding=utf-8
+"set fileencodings=ucs-bom,utf-8,cp936
+"set fileencoding=utf-8
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Display
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"set shortmess=atI
+"winpos 5 5
+"set lines=40 columns=155
+set go=
+"color asmanian2
+"set guifont=Courier_New:h10:cANSI
+"syntax on
+autocmd InsertLeave * se nocul
+autocmd InsertEnter * se cul    
+"set ruler
+set showcmd
+"set cmdheight=1
+"set whichwrap+=<,>,h,l
+"set scrolloff=3
+set novisualbell
+set statusline=%F%m%r%h%w\ [FORMAT=%{&ff}]\ [TYPE=%Y]\ [POS=%l,%v][%p%%]\ %{strftime(\"%d/%m/%y\ -\ %H:%M\")}
+set laststatus=1
+set foldenable
+set foldmethod=manual
+"set background=dark
+set nocompatible
+
+if version >= 603
+	set helplang=cn
+	set encoding=utf-8
+endif
+
+"colorscheme murphy
+"
+"if (has("gui_running")) 
+"   set guifont=Bitstream\ Vera\ Sans\ Mono\ 10 
+"endif 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Title of new file
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"
+autocmd BufNewFile *.cpp,*.[ch],*.sh,*.java exec ":call SetTitle()" 
+"
+func SetTitle() 
+	"
+	if &filetype == 'sh' 
+		call setline(1,"\#########################################################################") 
+		call append(line("."), "\# File Name: ".expand("%")) 
+		call append(line(".")+1, "\# Author: ") 
+		call append(line(".")+2, "\# mail: ") 
+		call append(line(".")+3, "\# Created Time: ".strftime("%c")) 
+		call append(line(".")+4, "\#########################################################################") 
+		call append(line(".")+5, "\#!/bin/bash") 
+		call append(line(".")+6, "") 
+	else 
+		call setline(1, "/*************************************************************************") 
+		call append(line("."), "	> File Name: ".expand("%")) 
+		call append(line(".")+1, "	> Author: ") 
+		call append(line(".")+2, "	> Mail: ") 
+		call append(line(".")+3, "	> Created Time: ".strftime("%c")) 
+		call append(line(".")+4, " ************************************************************************/") 
+		call append(line(".")+5, "")
+	endif
+	if &filetype == 'cpp'
+		call append(line(".")+6, "#include <iostream>")
+		call append(line(".")+7, "using namespace std;")
+		call append(line(".")+8, "")
+	endif
+	if &filetype == 'c'
+		call append(line(".")+6, "#include <stdio.h>")
+		call append(line(".")+7, "#include <stdlib.h>")
+		call append(line(".")+8, "#include <math.h>")
+		call append(line(".")+9, "")
+		call append(line(".")+10, "int main(int argc, char* argv[])")
+	endif
+	"	if &filetype == 'java'
+	"		call append(line(".")+6,"public class ".expand("%"))
+	"		call append(line(".")+7,"")
+	"	endif
+	"
+	autocmd BufNewFile * normal G
+endfunc 
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+nmap <leader>w :w!<cr>
+nmap <leader>f :find<cr>
+
+"
+map <C-A> ggVGY
+map! <C-A> <Esc>ggVGY
+map <F12> gg=G
+"
+vmap <C-c> "+y
+"
+nnoremap <F2> :g/^\s*$/d<CR> 
+"
+nnoremap <C-F2> :vert diffsplit 
+"
+map <M-F2> :tabnew<CR>  
+"
+map <F3> :tabnew .<CR>  
+"
+map <C-F3> \be  
+"
+map <F5> :call CompileRunGcc()<CR>
+func! CompileRunGcc()
+	exec "w"
+	if &filetype == 'c'
+		exec "!g++ % -o %<"
+		exec "! ./%<"
+	elseif &filetype == 'cpp'
+		exec "!g++ % -o %<"
+		exec "! ./%<"
+	elseif &filetype == 'java' 
+		exec "!javac %" 
+		exec "!java %<"
+	elseif &filetype == 'sh'
+		:!./%
+	elseif &filetype == 'py'
+		exec "!python %"
+		exec "!python %<"
+	endif
+endfunc
+"C,C++
+map <F8> :call Rungdb()<CR>
+func! Rungdb()
+	exec "w"
+	exec "!g++ % -g -o %<"
+	exec "!gdb ./%<"
+endfunc
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"
+set autoread
+"
+autocmd FileType c,cpp map <buffer> <leader><space> :w<cr>:make<cr>
+"
+set completeopt=preview,menu 
+
+filetype plugin on
+"
+set clipboard+=unnamed 
+"
+set nobackup
+"
+:set makeprg=g++\ -Wall\ \ %
+
+set autowrite
+set ruler                   
+set cursorline              
+set magic                   
+set guioptions-=T           
+set guioptions-=m           
+"set statusline=\ %<%F[%1*%M%*%n%R%H]%=\ %y\ %0(%{&fileformat}\ %{&encoding}\ %c:%l/%L%)\
+"
+set foldcolumn=0
+set foldmethod=indent 
+set foldlevel=3 
+set foldenable              
+"
+set nocompatible
+"
+set syntax=on
+"
+set noeb
+"
+set confirm
+"
+set autoindent
+set cindent
+"
+set tabstop=4
+"
+set softtabstop=4
+set shiftwidth=4
+"
+set noexpandtab
+"
+set smarttab
+"
+set number
+"
+set history=1000
+"
+set nobackup
+set noswapfile
+"
+set ignorecase
+"
+set hlsearch
+set incsearch
+"
+set gdefault
+"
+set enc=utf-8
+set fencs=utf-8,ucs-bom,shift-jis,gb18030,gbk,gb2312,cp936
+"
+set langmenu=zh_CN.UTF-8
+set helplang=cn
+"
+"set statusline=%F%m%r%h%w\ [FORMAT=%{&ff}]\ [TYPE=%Y]\ [POS=%l,%v][%p%%]\ %{strftime(\"%d/%m/%y\ -\ %H:%M\")}
+"set statusline=[%F]%y%r%m%*%=[Line:%l/%L,Column:%c][%p%%]
+"
+set laststatus=2
+"
+set cmdheight=2
+"
+filetype on
+"
+filetype plugin on
+"
+filetype indent on
+"
+set viminfo+=!
+"
+set iskeyword+=_,$,@,%,#,-
+"
+set linespace=0
+"
+set wildmenu
+"
+set backspace=2
+"
+set whichwrap+=<,>,h,l
+"
+set mouse=a
+set selection=exclusive
+set selectmode=mouse,key
+"
+set report=0
+"
+set fillchars=vert:\ ,stl:\ ,stlnc:\
+"
+set showmatch
+"
+set matchtime=1
+"
+set scrolloff=3
+"
+set smartindent
+"
+au BufRead,BufNewFile *  setfiletype txt
+"
+:inoremap ( ()<ESC>i
+:inoremap ) <c-r>=ClosePair(')')<CR>
+":inoremap { {<CR>}<ESC>O
+":inoremap } <c-r>=ClosePair('}')<CR>
+:inoremap [ []<ESC>i
+:inoremap ] <c-r>=ClosePair(']')<CR>
+:inoremap " ""<ESC>i
+:inoremap ' ''<ESC>i
+function! ClosePair(char)
+	if getline('.')[col('.') - 1] == a:char
+		return "\<Right>"
+	else
+		return a:char
+	endif
+endfunction
+filetype plugin indent on 
+"
+set completeopt=longest,menu
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+"
+let NERDChristmasTree=1
+let NERDTreeAutoCenter=1
+let NERDTreeBookmarksFile=$VIM.'\Data\NerdBookmarks.txt'
+let NERDTreeMouseMode=2
+let NERDTreeShowBookmarks=1
+let NERDTreeShowFiles=1
+let NERDTreeShowHidden=1
+let NERDTreeShowLineNumbers=1
+let NERDTreeWinPos='left'
+let NERDTreeWinSize=31
+nnoremap f :NERDTreeToggle
+map <F7> :NERDTree<CR>  
